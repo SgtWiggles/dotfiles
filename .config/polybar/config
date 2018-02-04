@@ -1,0 +1,169 @@
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+
+[color]
+white = #fff
+base = #efebe0
+;brown = #51311a
+brown = #666
+orange = #fbb253
+orange2 = #ef7922
+purple = #e58a95
+red = #f1383d
+pink = #f26262
+pink2 = #f64d64
+
+[bar/momiji]
+monitor = ${env:MONITOR:}
+;monitor = DP-1
+override-redirect = false
+bottom = false
+fixed-center = true
+enable-ipc = true
+
+width = 100%
+height = 24
+
+font-0 = "Misc Termsyn:size=12;1"
+font-1 = "Noto Sans Mono CJK JP:size12;1"
+font-2 = "FontAwesome:size=12;1"
+font-3 = "Material Icons:size=12; 1"
+
+
+background = ${color.base}
+foreground = ${color.brown}
+
+line-color = ${color.red}
+underline-size = 0
+overline-size = 0
+
+border-bottom-size = 3
+border-bottom-color = ${color.pink}
+
+padding-left = 3
+padding-right = 3
+module-margin-left = 1
+module-margin-right = 2
+
+tray-position = right
+tray-padding = 0
+tray-maxsize = 16
+
+scroll-up = i3wm-wsnext
+scroll-down = i3wm-wsprev
+
+modules-left = xwindow
+modules-center = i3
+modules-right = wifi cpu memory battery pulseaudio date
+
+
+[module/xwindow]
+type = internal/xwindow
+format = <label>
+label = %title%
+label-maxlen = 75
+
+[module/i3]
+type = internal/i3
+strip-wsnumbers = true
+wrapping-scroll = false
+pin-workspaces = true
+label-focused =%name%
+label-focused-foreground = ${color.pink}
+label-focused-background = ${color.base}
+label-focused-padding = 1
+
+label-unfocused =%name%
+label-unfocused-padding = 1
+
+label-visible =%name%
+label-visible-padding = 1
+
+label-urgent =%name%
+label-urgent-background = ${color.base}
+label-urgent-foreground = ${color.red}
+label-urgent-padding = 1
+
+[module/wifi]
+type = internal/network
+interface = wlp3s0
+interval = 1.0
+format-connected = <label-connected>
+label-connected = %downspeed:8:8%
+;format-connected = <ramp-signal> <label-connected>
+;label-connected = %essid%
+format-disconnected =  NO WIFI
+
+ramp-signal-0 = 
+
+[module/cpu]
+type = internal/cpu
+label = %percentage:2:2%%
+interval = 2
+format-prefix = ""
+
+[module/memory]
+type = internal/memory
+interval = 2
+label = %mb_used:10:10%
+format-prefix = ""
+
+
+[module/battery]
+type = internal/battery
+full-at = 97
+time-format = %H:%M
+battery = BAT0
+adapter = AC
+
+format-charging = <animation-charging> <label-charging>
+label-charging = %percentage%% (%time%)
+
+format-discharging = <ramp-capacity> <label-discharging>
+label-discharging = %percentage%% (%time%)
+
+format-full = <label-full>
+format-full-prefix = " "
+
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+animation-charging-framerate = 750
+
+
+[module/pulseaudio]
+type = internal/pulseaudio
+;master-mixer　= Master
+;speaker-mixer = Speaker
+;headphone-mixer = Headphone
+;headphone-id = 21
+mapped = true
+
+format-volume = <ramp-volume><label-volume>
+label-volume = %percentage:2:3%%
+
+label-muted = ""
+
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
+
+;ramp-headphones-0 = 
+;ramp-headphones-1 = 
+;ramp-headphones-2 = 
+
+[module/date]
+type = internal/date
+interval = 30
+label =  %time%
+time =  %H:%M
+time-alt =  %Y-%m-%d
