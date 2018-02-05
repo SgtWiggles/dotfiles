@@ -20,6 +20,7 @@ Plugin 'vim-airline/vim-airline-themes'
 
 Plugin 'junegunn/fzf.vim'
 Plugin 'flazz/vim-colorschemes'
+Plugin 'nightsense/vimspectr'
 Plugin 'nightsense/seabird'
 "Plugin 'twe4ked/vim-colorscheme-switcher'
 "Plugin 'scrooloose/nerdcommenter'
