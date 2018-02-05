@@ -147,8 +147,8 @@ assign [window_role="browser"] $ws9
 assign [class="(?i)ncmpcpp"] $ws0
 
 # Color
-# set $cbg "#f26262"
-set $cbg "#e04040"
+set $cbg "#f26262"
+#set $cbg "#e04040"
 set $ccolor "#efebe0"
 set $cunfo "#cb8b8b"
 set $cindi "#145ba7"
