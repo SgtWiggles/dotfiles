@@ -1,5 +1,6 @@
 #!/bin/bash
 setxkbmap -option caps:swapescape
+mpd
 
 if xrandr | grep "DP-1"; then
 	i3-msg "workspace 1:1, move workspace to output DP-1"
