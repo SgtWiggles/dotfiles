@@ -25,10 +25,10 @@ enable-ipc = true
 width = 100%
 height = 24
 
-font-0 = "Misc Termsyn:size=8;1"
-font-1 = "Noto Sans Mono CJK JP:size=8;1"
-font-2 = "FontAwesome:size=8;1"
-font-3 = "Material Icons:size=8; 1"
+font-0 = "Misc Termsyn:size=9;1"
+font-1 = "Noto Sans Mono CJK JP:size=9;1"
+font-2 = "FontAwesome:size=9;1"
+font-3 = "Material Icons:size=9; 1"
 
 background = ${color.base}
 foreground = ${color.brown}
@@ -46,7 +46,7 @@ module-margin-left = 1
 module-margin-right = 2
 
 tray-position = right
-tray-padding = 0
+tray-padding = 2
 tray-maxsize = 16
 
 scroll-up = i3wm-wsnext
@@ -99,21 +99,48 @@ type = internal/i3
 strip-wsnumbers = true
 wrapping-scroll = false
 pin-workspaces = true
-label-focused =%name%
+index-sort = true
+
+
+; these do not look good unless they are big
+; ws-icon-0 = 0;壹
+; ws-icon-1 = 1;貳
+; ws-icon-2 = 2;參
+; ws-icon-3 = 3;肆
+; ws-icon-4 = 4;伍
+; ws-icon-5 = 5;陸
+; ws-icon-6 = 6;柒
+; ws-icon-7 = 7;捌
+; ws-icon-8 = 8;識
+; ws-icon-9 = 9;響
+
+ws-icon-0 = 0;一
+ws-icon-1 = 1;二
+ws-icon-2 = 2;三
+ws-icon-3 = 3;四
+ws-icon-4 = 4;五
+ws-icon-5 = 5;六
+ws-icon-6 = 6;七
+ws-icon-7 = 7;八
+ws-icon-8 = 8;知
+ws-icon-9 = 9;音
+
+label-focused =%icon%
 label-focused-foreground = ${color.pink}
 label-focused-background = ${color.base}
 label-focused-padding = 1
 
-label-unfocused =%name%
+label-unfocused =%icon%
 label-unfocused-padding = 1
 
-label-visible =%name%
+label-visible =%icon%
 label-visible-padding = 1
 
-label-urgent =%name%
+label-urgent =%icon%
 label-urgent-background = ${color.base}
 label-urgent-foreground = ${color.red}
 label-urgent-padding = 1
+
 
 [module/wifi]
 type = internal/network
@@ -197,3 +224,7 @@ interval = 30
 label =  %time%
 time =  %H:%M
 time-alt =  %Y-%m-%d
+
+
+
+

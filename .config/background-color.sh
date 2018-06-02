@@ -1,7 +1,4 @@
 #!/bin/sh
-# generated with a template adapted from
-# Base16 Shell template by Chris Kempson (http://chriskempson.com)
-
 H=$(date +%k)
 if [ "$H" -lt "7" ] || [ "$H" -gt "18" ]; then 
 	color_foreground="f2/f2/ec"
@@ -21,14 +18,14 @@ if [ "$H" -lt "7" ] || [ "$H" -gt "18" ]; then
 	unset color_foreground
 	unset color_background
 	
-	line=$(head -n 1 ~/.config/current-bg.txt)
-	if [ "$line" != "night" ]; then
+	line=$(sed '2q;d' ~/.fehbg)
+	if [ "$line" != *"night"* ]; then
 		/usr/bin/feh --bg-center ~/Pictures/nightbg.png &
 		echo night > ~/.config/current-bg.txt
 	fi
 else
-	line=$(head -n 1 ~/.config/current-bg.txt)
-	if [ "$line" != "day" ]; then
+	line=$(sed '2q;d' ~/.fehbg)
+	if [ "$line" != "momijibg2" ]; then
 		/usr/bin/feh --bg-center ~/Pictures/momijibg2.png &
 		echo day > ~/.config/current-bg.txt
 	fi
