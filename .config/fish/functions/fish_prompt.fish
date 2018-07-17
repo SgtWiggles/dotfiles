@@ -1,0 +1,1 @@
+/home/cptwiggles/.local/share/omf/themes/edan/fish_prompt.fish
