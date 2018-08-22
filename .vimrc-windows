@@ -1,0 +1,242 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+set rtp+=$HOME/.vim/bundle/Vundle.vim/
+call vundle#begin('$HOME/.vim/bundle/')
+
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'NLKNguyen/papercolor-theme'
+Plugin 'tylerbrazier/vim-bracepair'
+
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'SirVer/ultisnips'
+
+"Plugin 'airblade/vim-gitgutter'
+"Plugin 'scrooloose/syntastic'
+"Plugin 'derekwyatt/vim-fswitch'
+"Plugin 'tpope/vim-vinegar'
+
+"Plugin 'justinmk/vim-dirvish'
+Plugin 'cocopon/vaffle.vim'
+Plugin 'tpope/vim-surround'
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
+Plugin 'ludovicchabant/vim-gutentags'
+
+Plugin 'vim-perl/vim-perl'
+
+Plugin 'majutsushi/tagbar'
+"
+Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'rhysd/vim-clang-format'
+
+Plugin 'rust-lang/rust.vim'
+Plugin 'a.vim'
+
+call vundle#end()
+
+filetype plugin indent on
+set t_Co=256
+
+syntax on
+let g:PaperColor_Theme_Options = {
+			\   'theme': {
+			\     'default': {
+			\       'allow_bold': 1,
+			\       'allow_italic': 0,
+			\       'transparent_background': 1
+			\     }
+			\   },
+			\   'language': {
+			\     'python': {
+			\       'highlight_builtins' : 1
+			\     },
+			\     'c': {
+			\       'highlight_builtins' : 1
+			\     },
+			\     'cpp': {
+			\       'highlight_standard_library': 1
+			\     }
+			\   }
+			\ }
+
+set background=light
+color PaperColor
+"highlight clear SignColumn
+set scrolloff=10
+
+set guifont=Noto_Mono_For_Powerline:h10:w5.5
+au GUIEnter * simalt ~x
+"let g:gitgutter_realtime = 1
+"let g:gitgutter_eager = 1
+
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline#extensions#whitespace#enabled = 0
+
+let mapleader=" "
+"Buffer management
+"
+let g:airline#extensions#tabline#buffer_idx_format = {
+			\ '0': '0: ',
+			\ '1': '1: ',
+			\ '2': '2: ',
+			\ '3': '3: ',
+			\ '4': '4: ',
+			\ '5': '5: ',
+			\ '6': '6: ',
+			\ '7': '7: ',
+			\ '8': '8: ',
+			\ '9': '9: '
+			\}
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+nmap <leader>1 <Plug>AirlineSelectTab1
+nmap <leader>2 <Plug>AirlineSelectTab2
+nmap <leader>3 <Plug>AirlineSelectTab3
+nmap <leader>4 <Plug>AirlineSelectTab4
+nmap <leader>5 <Plug>AirlineSelectTab5
+nmap <leader>6 <Plug>AirlineSelectTab6
+nmap <leader>7 <Plug>AirlineSelectTab7
+nmap <leader>8 <Plug>AirlineSelectTab8
+nmap <leader>9 <Plug>AirlineSelectTab9
+nmap <leader>0 <Plug>AirlineSelectTab10
+nmap <leader>- <Plug>AirlineSelectPrevTab
+nmap <leader>+ <Plug>AirlineSelectNextTab
+nnoremap <leader>b :ls<CR>:b
+nnoremap <leader>q :bw<CR>
+nnoremap <leader>k :bnext<CR>
+nnoremap <leader>j :bprev<CR>
+
+
+let g:airline_theme='papercolor'
+
+filetype plugin indent on
+set backspace=indent,eol,start
+set encoding=utf-8
+set clipboard=unnamed
+set completeopt-=preview
+set number
+set cursorline
+set timeout timeoutlen=200 ttimeoutlen=200
+
+map <F11> :setlocal spell! spelllang=en_us<CR>
+
+set guioptions-=m  "remove menu bar
+set guioptions-=T  "remove toolbar
+set guioptions-=r  "remove right-hand scroll bar
+set guioptions-=L  "remove left-hand scroll bar
+
+" Movement keys
+nnoremap J 10j
+nnoremap K 10k
+nnoremap L w
+nnoremap H b
+nnoremap <A-j> <C-d>
+nnoremap <A-k> <C-u>
+
+vnoremap J 10j
+vnoremap K 10k
+vnoremap L w
+vnoremap H b
+vnoremap <A-j> <C-d>
+vnoremap <A-k> <C-u>
+
+imap <C-BS> <C-W>
+nmap <C-BS> <C-W>
+
+"  Splits management
+" let g:dirvish_mode = ':sort /\(.\.\ze[^\/]*[\/]\=$\)\|\(.*\\=$\)/'
+
+function! s:customize_vaffle_mappings() abort
+	" Customize key mappings here
+	nmap <buffer> - <Plug>(vaffle-open-parent)
+endfunction
+augroup vimrc_vaffle
+	autocmd!
+	autocmd FileType vaffle call s:customize_vaffle_mappings()
+augroup END
+
+let g:loaded_netrwPlugin = 1
+let g:vaffle_show_hidden_files = 1
+
+nnoremap <C-j> <C-w><C-j>
+nnoremap <C-k> <C-w><C-k>
+nnoremap <C-l> <C-w><C-l>
+nnoremap <C-h> <C-w><C-h>
+nnoremap <C-e> :Vaffle<CR>
+nnoremap - :Vaffle<CR>
+nnoremap <C-e><C-v> :vsplit<CR>:Vaffle<CR>
+nnoremap <C-e><C-h> :split<CR>:Vaffle<CR>
+
+" Saving and loading
+nnoremap <C-s> :w<CR>
+inoremap <C-s> <Esc> :w<CR>
+
+
+" Reload vimrc
+nnoremap <F12> :source ~/.vimrc<CR>:simalt ~x<CR>
+autocmd BufEnter * silent! lcd %:p:h
+
+"Clang Format Stuff
+let g:clang_format#code_style = "LLVM"
+let g:clang_format#auto_format = 1
+let g:clang_format#style_options = {
+			\"Standard": "C++11",
+			\"UseTab": "ForContinuationAndIndentation",
+			\"TabWidth":2}
+let g:clang_format#detect_style_file = 0
+let g:clang_format#command =  "clang-format.exe"
+nnoremap <C-c><C-f> :ClangFormat<CR>
+
+" C++ Settings
+let g:ycm_confirm_extra_conf = 0
+let g:alternateExtensions_CPP = "inc,h,H,HPP,hpp"
+
+" FZF settings
+let g:fzf_tags_command = 'ctags -R'
+nnoremap <C-p> :Files<CR>
+nnoremap <leader><leader> :Tags<CR>
+
+" Header Switching
+nnoremap <C-a> :w<CR>:A<CR>
+inoremap <C-a> :w<CR>:A<CR>
+
+nnoremap <C-Enter> :vertical terminal<CR>
+"tnoremap <Esc> <C-\><C-n>
+tnoremap <C-q> <C-\><C-n>:q!<CR>
+
+
+" Formatting Stuff
+set autoindent
+set noexpandtab
+
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+
+set ignorecase
+set smartcase
+function! TrimWhiteSpace()
+	%s/\s*$//
+	''
+	normal! mzgg=G`z
+	normal! zz
+endfunction
+
+set list lcs=tab:\¦\ "needs the space
+autocmd BufWritePre *.lua silent call TrimWhiteSpace()
+"autocmd FileWritePre * call TrimWhiteSpace()
+"autocmd FileAppendPre * call TrimWhiteSpace()
+"autocmd FilterWritePre * call TrimWhiteSpace()
+
+nnoremap <F2> :silent call TrimWhiteSpace()<CR>
+nnoremap <F1> mzgg=G`z
+
+let $TERM = ''
+
+"Rust: rust
+"let g:rustfmt_autosave = 1
+
