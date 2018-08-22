@@ -274,13 +274,12 @@ bindsym $mod+Shift+Tab mode "default"
 
 
 
-# Color
-set $cbg "#f26262"
-set $ccolor "#efebe0"
-set $cunfo "#cb8b8b"
-set $cindi "#145ba7"
-set $cindiu "#8a9db1"
-#set $cbg "#e04040"
+
+set $cbg  "#673ab7"
+set $ccolor  "#eeeeff"
+set $cunfo  "#502c8c"
+set $cindiu "#673ab7"
+set $cindi  "#ae80ff"
 
 #<colorclass>           <border> <background> <text>  <indicator> <child_border>
 client.focused          $cbg     $cbg         $ccolor $cindi      $cbg

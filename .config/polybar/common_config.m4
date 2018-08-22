@@ -1,18 +1,3 @@
-[color]
-background = #efebe0
-foreground = #666
-border-bottom=#f1383d
-urgent = #f1383d
-focused = #f26262
-
-white = #fff
-;border-bottom = #f26262
-;brown = #51311a
-orange = #fbb253
-orange2 = #ef7922
-purple = #e58a95
-pink2 = #f64d64
-
 [global/wm]
 margin-top = 0
 margin-bottom = 0
@@ -253,4 +238,3 @@ interval = 30
 label =  %time%
 time =  %H:%M
 time-alt =  %Y-%m-%d
-

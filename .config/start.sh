@@ -1,11 +1,12 @@
 #!/bin/bash
-setxkbmap -option caps:swapescape
-echo Swapped Escape
+	setxkbmap -option caps:swapescape
+	xmodmap -e 'keycode 65 = space underscore'
+	echo "Swapped Escape"
 
 if xrandr | grep "DP-1 connected"; then
 	i3-msg "workspace 0, move workspace to output DP-1"
 	i3-msg "workspace 8, move workspace to output HDMI-0"
-	i3-msg "workspace 2, move workspace to output VGA-0"
+	i3-msg "workspace 10, move workspace to output VGA-0"
 	i3-msg "workspace 3, move workspace to output LVDS-0"
 fi
 

@@ -13,7 +13,6 @@
 #generate_workspace_binds(prefix)
 
 
-
 #generate_workspace_set(number, max)
 
 
@@ -30,31 +29,36 @@ gaps inner 10
 gaps outer 0
 smart_gaps on
 smart_borders on
-new_window pixel 1
-
-mode "props" {
-	bindsym n "exec python3 ~/.config/color-changer/color-changer.py night && i3-msg mode default"
-	bindsym d "exec python3 ~/.config/color-changer/color-changer.py day && i3-msg mode default"
-
-	bindsym Escape mode "default"
-	bindsym Return mode "default"
-}
+new_window pixel 2
 
 ## Specific window
 for_window [window_role="pop-up|bubble|task_dialog|Preferences"] floating enable
 for_window [window_type="dialog|menu"] floating enable
 for_window [window_role="browser|GtkFileChooserDialog"] resize set 800 600, move position center
-assign [window_role="browser"] 8
 for_window [class="(?i)pavucontrol|lxappearance|xarchiver|kamus"] floating enable
 
-# Startup
-exec --no-startup-id "bash -c '~/.config/start.sh'"
-exec --no-startup-id "python3 '~/.config/color-changer/color-changer.py'"
 
+# Color
+set $cbg "#f26262"
+#set $cbg "#e04040"
+set $ccolor "#efebe0"
+set $cunfo "#cb8b8b"
+set $cindi "#145ba7"
+set $cindiu "#8a9db1"
+
+#<colorclass>           <border> <background> <text> <indicator> <child_border>
+client.focused          $cbg    $cbg    $ccolor $cindi   $cbg
+client.focused_inactive $cbg    $cunfo  $ccolor $cindiu   $cunfo
+client.unfocused        $cbg    $cunfo  $ccolor $cindiu   $cunfo
+client.urgent           $cbg    $cunfo  $ccolor $cindi   $cunfo
+
+# Startup
+exec --no-startup-id "sh -c '~/.config/start.sh'"
 
 
 
 	
+
 bindsym $mod+1 workspace 0
 bindsym $mod+2 workspace 1
 bindsym $mod+3 workspace 2
@@ -65,6 +69,7 @@ bindsym $mod+7 workspace 6
 bindsym $mod+8 workspace 7
 bindsym $mod+9 workspace 8
 bindsym $mod+0 workspace 9
+
 bindsym $mod+Shift+1 move container to workspace 0
 bindsym $mod+Shift+2 move container to workspace 1
 bindsym $mod+Shift+3 move container to workspace 2
@@ -75,21 +80,17 @@ bindsym $mod+Shift+7 move container to workspace 6
 bindsym $mod+Shift+8 move container to workspace 7
 bindsym $mod+Shift+9 move container to workspace 8
 bindsym $mod+Shift+0 move container to workspace 9
+
+
 	
-
-
 ## Quick Launch
-bindsym $mod+Return exec ume
-bindsym $mod+Shift+Return exec sakura
+bindsym $mod+Return exec sakura
 bindsym $mod+d exec --no-startup-id "rofi -show run"
 bindsym $mod+Pause exec "~/.config/lock.sh"
-bindsym $mod+p mode "props"
-
 
 ## Music player launch!
 #bindsym $mod+m  [instance="ncmpcpp"] exec "~/.config/ncmpcpp_start.sh"; scratchpad show
-#bindsym $mod+m exec "ume -x ~/go/bin/pms"
-bindsym $mod+m exec "ume -x ncmpcpp"
+bindsym $mod+m exec "sakura -x ncmpcpp"
 
 
 ## Window Focus (vim)
@@ -108,12 +109,12 @@ bindsym $mod+Shift+l move right 30px
 bindsym $mod+Mod1+h resize shrink width 30 px or 10 ppt
 bindsym $mod+Mod1+j resize shrink height 30 px or 10 ppt
 bindsym $mod+Mod1+k resize grow height 30 px or 10 ppt
-bindsym $mod+Mod1+l resize grow width 30 px or 10 ppt
+bindsym $mod+Mod1+l resize grow width 30 px or 10 ppt 
 
 bindsym $mod+Shift+Mod1+h resize shrink width 10 px or 1 ppt
 bindsym $mod+Shift+Mod1+j resize shrink height 10 px or 1 ppt
 bindsym $mod+Shift+Mod1+k resize grow height 10 px or 1 ppt
-bindsym $mod+Shift+Mod1+l resize grow width 10 px or 1 ppt
+bindsym $mod+Shift+Mod1+l resize grow width 10 px or 1 ppt 
 #
 ## Tiling
 bindsym $mod+y split h
@@ -136,10 +137,11 @@ bindsym $mod+Shift+R exec "i3-msg restart; ~/.config/reload.sh"
 bindsym $mod+Shift+e exit
 bindsym Print exec "maim -u -s -n -l -c 0.157,0.333,0.466,0.4 ~/Pictures/scrots-$(date -Iseconds | cut -d'+' -f1).png"
 bindsym Mod4+Print exec "maim -u -s -n -l -c 0.157,0.333,0.466,0.4 | xclip -selection clipboard -t image/png"
+bindsym $mod+F1 exec "~/.config/lock.sh"
 
 ## Audio
-bindsym XF86AudioLowerVolume exec "~/.config/volume_down.sh"
-bindsym XF86AudioRaiseVolume exec "~/.config/volume_up.sh"
+bindsym XF86AudioRaiseVolume exec --no-startup-id "pamixer -u -0 1"
+bindsym XF86AudioLowerVolume exec --no-startup-id "pamixer -u -d 1"
 bindsym XF86AudioMute exec --no-startup-id "pamixer -t"
 
 bindsym XF86AudioPrev exec "mpc prev"
@@ -149,21 +151,21 @@ bindsym XF86AudioPlay exec "mpc toggle"
 
 ## Brightness
 bindsym XF86KbdBrightnessUp exec "xbacklight -inc 10"
-bindsym XF86KbdBrightnessDown exec  "xbacklight -dec 10"
+bindsym XF86KbdBrightnessDown exec  "xbacklight -dec 10" 
 bindsym XF86MonBrightnessUp exec "xbacklight -inc 10"
-bindsym XF86MonBrightnessDown exec "xbacklight -dec 10"
+bindsym XF86MonBrightnessDown exec "xbacklight -dec 10" 
 
 #Quick laumch firefox and move
-bindsym $mod+Shift+b "exec --no-startup-id firefox"
-bindsym $mod+b workspace 8
+bindsym $mod+Shift+b exec --no-startup-id firefox
+bindsym $mod+b workspace $ws8
+assign [window_role="browser"] $ws8
 
-bindsym $mod+Tab mode "M1"
-bindsym $mod+Shift+Tab mode "M-1"
+bindsym $mod+Tab "$workspace_1"
 
 
-mode "M1" {
-
+mode "$workspace_1" {
 	
+
 bindsym $mod+1 workspace 10
 bindsym $mod+2 workspace 11
 bindsym $mod+3 workspace 12
@@ -174,6 +176,7 @@ bindsym $mod+7 workspace 16
 bindsym $mod+8 workspace 17
 bindsym $mod+9 workspace 18
 bindsym $mod+0 workspace 19
+
 bindsym $mod+Shift+1 move container to workspace 10
 bindsym $mod+Shift+2 move container to workspace 11
 bindsym $mod+Shift+3 move container to workspace 12
@@ -184,21 +187,17 @@ bindsym $mod+Shift+7 move container to workspace 16
 bindsym $mod+Shift+8 move container to workspace 17
 bindsym $mod+Shift+9 move container to workspace 18
 bindsym $mod+Shift+0 move container to workspace 19
+
+
 	
-
-
 ## Quick Launch
-bindsym $mod+Return exec ume
-bindsym $mod+Shift+Return exec sakura
+bindsym $mod+Return exec sakura
 bindsym $mod+d exec --no-startup-id "rofi -show run"
 bindsym $mod+Pause exec "~/.config/lock.sh"
-bindsym $mod+p mode "props"
-
 
 ## Music player launch!
 #bindsym $mod+m  [instance="ncmpcpp"] exec "~/.config/ncmpcpp_start.sh"; scratchpad show
-#bindsym $mod+m exec "ume -x ~/go/bin/pms"
-bindsym $mod+m exec "ume -x ncmpcpp"
+bindsym $mod+m exec "sakura -x ncmpcpp"
 
 
 ## Window Focus (vim)
@@ -217,12 +216,12 @@ bindsym $mod+Shift+l move right 30px
 bindsym $mod+Mod1+h resize shrink width 30 px or 10 ppt
 bindsym $mod+Mod1+j resize shrink height 30 px or 10 ppt
 bindsym $mod+Mod1+k resize grow height 30 px or 10 ppt
-bindsym $mod+Mod1+l resize grow width 30 px or 10 ppt
+bindsym $mod+Mod1+l resize grow width 30 px or 10 ppt 
 
 bindsym $mod+Shift+Mod1+h resize shrink width 10 px or 1 ppt
 bindsym $mod+Shift+Mod1+j resize shrink height 10 px or 1 ppt
 bindsym $mod+Shift+Mod1+k resize grow height 10 px or 1 ppt
-bindsym $mod+Shift+Mod1+l resize grow width 10 px or 1 ppt
+bindsym $mod+Shift+Mod1+l resize grow width 10 px or 1 ppt 
 #
 ## Tiling
 bindsym $mod+y split h
@@ -245,10 +244,11 @@ bindsym $mod+Shift+R exec "i3-msg restart; ~/.config/reload.sh"
 bindsym $mod+Shift+e exit
 bindsym Print exec "maim -u -s -n -l -c 0.157,0.333,0.466,0.4 ~/Pictures/scrots-$(date -Iseconds | cut -d'+' -f1).png"
 bindsym Mod4+Print exec "maim -u -s -n -l -c 0.157,0.333,0.466,0.4 | xclip -selection clipboard -t image/png"
+bindsym $mod+F1 exec "~/.config/lock.sh"
 
 ## Audio
-bindsym XF86AudioLowerVolume exec "~/.config/volume_down.sh"
-bindsym XF86AudioRaiseVolume exec "~/.config/volume_up.sh"
+bindsym XF86AudioRaiseVolume exec --no-startup-id "pamixer -u -1 1"
+bindsym XF86AudioLowerVolume exec --no-startup-id "pamixer -u -d 1"
 bindsym XF86AudioMute exec --no-startup-id "pamixer -t"
 
 bindsym XF86AudioPrev exec "mpc prev"
@@ -258,33 +258,123 @@ bindsym XF86AudioPlay exec "mpc toggle"
 
 ## Brightness
 bindsym XF86KbdBrightnessUp exec "xbacklight -inc 10"
-bindsym XF86KbdBrightnessDown exec  "xbacklight -dec 10"
+bindsym XF86KbdBrightnessDown exec  "xbacklight -dec 10" 
 bindsym XF86MonBrightnessUp exec "xbacklight -inc 10"
-bindsym XF86MonBrightnessDown exec "xbacklight -dec 10"
+bindsym XF86MonBrightnessDown exec "xbacklight -dec 10" 
 
 #Quick laumch firefox and move
-bindsym $mod+Shift+b "exec --no-startup-id firefox"
-bindsym $mod+b workspace 8
+bindsym $mod+Shift+b exec --no-startup-id firefox
+bindsym $mod+b workspace $ws8
+assign [window_role="browser"] $ws8
 
-bindsym $mod+Tab mode "default"
-bindsym $mod+Shift+Tab mode "default"
+bindsym $mod+Tab "$workspace_2"
 }
 
+mode "$workspace_2" {
+	
+
+bindsym $mod+1 workspace 20
+bindsym $mod+2 workspace 21
+bindsym $mod+3 workspace 22
+bindsym $mod+4 workspace 23
+bindsym $mod+5 workspace 24
+bindsym $mod+6 workspace 25
+bindsym $mod+7 workspace 26
+bindsym $mod+8 workspace 27
+bindsym $mod+9 workspace 28
+bindsym $mod+0 workspace 29
+
+bindsym $mod+Shift+1 move container to workspace 20
+bindsym $mod+Shift+2 move container to workspace 21
+bindsym $mod+Shift+3 move container to workspace 22
+bindsym $mod+Shift+4 move container to workspace 23
+bindsym $mod+Shift+5 move container to workspace 24
+bindsym $mod+Shift+6 move container to workspace 25
+bindsym $mod+Shift+7 move container to workspace 26
+bindsym $mod+Shift+8 move container to workspace 27
+bindsym $mod+Shift+9 move container to workspace 28
+bindsym $mod+Shift+0 move container to workspace 29
 
 
+	
+## Quick Launch
+bindsym $mod+Return exec sakura
+bindsym $mod+d exec --no-startup-id "rofi -show run"
+bindsym $mod+Pause exec "~/.config/lock.sh"
+
+## Music player launch!
+#bindsym $mod+m  [instance="ncmpcpp"] exec "~/.config/ncmpcpp_start.sh"; scratchpad show
+bindsym $mod+m exec "sakura -x ncmpcpp"
 
 
-# Color
-set $cbg "#f26262"
-set $ccolor "#efebe0"
-set $cunfo "#cb8b8b"
-set $cindi "#145ba7"
-set $cindiu "#8a9db1"
-#set $cbg "#e04040"
+## Window Focus (vim)
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
 
-#<colorclass>           <border> <background> <text>  <indicator> <child_border>
-client.focused          $cbg     $cbg         $ccolor $cindi      $cbg
-client.focused_inactive $cbg     $cunfo       $ccolor $cindiu     $cunfo
-client.unfocused        $cbg     $cunfo       $ccolor $cindiu     $cunfo
-client.urgent           $cbg     $cunfo       $ccolor $cindi      $cunfo
+## Window Move
+bindsym $mod+Shift+h move left 30px
+bindsym $mod+Shift+j move down 30px
+bindsym $mod+Shift+k move up 30px
+bindsym $mod+Shift+l move right 30px
+
+## Window Resize
+bindsym $mod+Mod1+h resize shrink width 30 px or 10 ppt
+bindsym $mod+Mod1+j resize shrink height 30 px or 10 ppt
+bindsym $mod+Mod1+k resize grow height 30 px or 10 ppt
+bindsym $mod+Mod1+l resize grow width 30 px or 10 ppt 
+
+bindsym $mod+Shift+Mod1+h resize shrink width 10 px or 1 ppt
+bindsym $mod+Shift+Mod1+j resize shrink height 10 px or 1 ppt
+bindsym $mod+Shift+Mod1+k resize grow height 10 px or 1 ppt
+bindsym $mod+Shift+Mod1+l resize grow width 10 px or 1 ppt 
+#
+## Tiling
+bindsym $mod+y split h
+bindsym $mod+u split v
+bindsym $mod+g split toggle
+bindsym $mod+f fullscreen
+bindsym $mod+s layout stacking
+bindsym $mod+t layout tabbed
+bindsym $mod+e layout toggle split
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+
+bindsym $mod+q kill
+bindsym $mod+minus move scratchpad
+bindsym $mod+equal scratchpad show
+
+## Misc
+bindsym $mod+Shift+C reload
+bindsym $mod+Shift+R exec "i3-msg restart; ~/.config/reload.sh"
+bindsym $mod+Shift+e exit
+bindsym Print exec "maim -u -s -n -l -c 0.157,0.333,0.466,0.4 ~/Pictures/scrots-$(date -Iseconds | cut -d'+' -f1).png"
+bindsym Mod4+Print exec "maim -u -s -n -l -c 0.157,0.333,0.466,0.4 | xclip -selection clipboard -t image/png"
+bindsym $mod+F1 exec "~/.config/lock.sh"
+
+## Audio
+bindsym XF86AudioRaiseVolume exec --no-startup-id "pamixer -u -2 1"
+bindsym XF86AudioLowerVolume exec --no-startup-id "pamixer -u -d 1"
+bindsym XF86AudioMute exec --no-startup-id "pamixer -t"
+
+bindsym XF86AudioPrev exec "mpc prev"
+bindsym XF86AudioNext exec "mpc next"
+bindsym XF86AudioPlay exec "mpc toggle"
+
+
+## Brightness
+bindsym XF86KbdBrightnessUp exec "xbacklight -inc 10"
+bindsym XF86KbdBrightnessDown exec  "xbacklight -dec 10" 
+bindsym XF86MonBrightnessUp exec "xbacklight -inc 10"
+bindsym XF86MonBrightnessDown exec "xbacklight -dec 10" 
+
+#Quick laumch firefox and move
+bindsym $mod+Shift+b exec --no-startup-id firefox
+bindsym $mod+b workspace $ws8
+assign [window_role="browser"] $ws8
+
+bindsym $mod+Tab "default"
+}
+
 
