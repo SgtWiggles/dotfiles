@@ -1,17 +1,14 @@
-#!/bin/bash
-if xrandr | grep "DP-1 connected"; then
-	~/.screenlayout/foo.sh &  sleep 1 &
-fi
-echo set screen layout
+#! /bin/bash
+~/.config/screens.sh
+~/.fehbg  
+sleep 1 
+echo "Set background"
 
-~/.fehbg & sleep 1 &
-echo set background
-
-if ! pgrep -x "compton" > /dev/null
-then
-  /bin/compton &
+killall compton
+if ! pgrep -x "compton" > /dev/null; then
+  /bin/compton --config ~/.config/compton/compton.conf &
 fi
-echo loaded compton
+echo "Loaded compton"
 
 ~/.config/polybar/launch.sh
-echo reloaded polybar
+~/.config/music_start.sh

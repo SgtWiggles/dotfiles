@@ -3,12 +3,6 @@
 	xmodmap -e 'keycode 65 = space underscore'
 	echo "Swapped Escape"
 
-if xrandr | grep "DP-1 connected"; then
-	i3-msg "workspace 0, move workspace to output DP-1"
-	i3-msg "workspace 8, move workspace to output HDMI-0"
-	i3-msg "workspace 10, move workspace to output VGA-0"
-	i3-msg "workspace 3, move workspace to output LVDS-0"
-fi
 
 if ! pgrep -x redshift-gtk > /dev/null; then
 redshift-gtk &
@@ -20,5 +14,6 @@ if ! pgrep -x mpd > /dev/null; then
 	echo Started mpd
 fi
 
-sh ~/.config/reload.sh &
+
+bash ~/.config/reload.sh &
 echo Reloaded
