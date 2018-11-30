@@ -15,39 +15,35 @@ def decide_time():
     else:
         set_day_theme()
 
-
 def set_i3_theme(mode):
     subprocess.call(["cat ~/.config/i3/{}_config > ~/.config/i3/config".format(mode)], shell=True)
     subprocess.call(["i3-msg", "reload"])
+def set_polybar_theme(mode):
+    subprocess.call(["cat ~/.config/polybar/{}_config > ~/.config/polybar/config".format(mode)], shell=True)
+    subprocess.call(["polybar-msg", "cmd", "restart"])
 
 def set_ume_theme(mode):
     if mode == "night":
         subprocess.call(["ume", "--change-colorset", "2"])
     else:
         subprocess.call(["ume", "--change-colorset", "1"])
-
 def set_bg(mode):
     subprocess.call(["feh", "--bg-center", PATH + "./{}bg.png".format(mode)])
+def set_vim_colors(mode): 
+    subprocess.call(["cat ~/.config/color-changer/vim{} > ~/.vimcolors".format(mode)], shell=True)
 
-def set_polybar_theme(mode):
-    subprocess.call(["cat ~/.config/polybar/{}_config > ~/.config/polybar/config".format(mode)], shell=True)
-    subprocess.call(["polybar-msg", "cmd", "restart"])
-
-def set_theme(mode):
-    set_bg(mode)
+def set_all(mode):
+    set_polybar_theme(mode)
     set_i3_theme(mode)
+    set_bg(mode)
+    set_ume_theme(mode)
+    set_vim_colors(mode)
 
 def set_night_theme():
-    set_polybar_theme("night")
-    set_theme("night")
-    set_ume_theme("night")
-    set_i3_theme("night")
+    set_all("night")
 
 def set_day_theme():
-    set_polybar_theme("day")
-    set_theme("day")
-    set_ume_theme("day")
-    set_i3_theme("day")
+    set_all("day")
     
 def main():
     if len(sys.argv) == 1:
