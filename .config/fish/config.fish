@@ -7,12 +7,14 @@ set TERM xterm-256color
 
 setenv SSH_ENV $HOME/.ssh/environment
 
-alias vi vim
-alias v vim
+alias vi 'vim --servername "v"'
+alias v 'vim --servername "v"'
 
 #sh ~/.config/background-color.sh
-set -xU RUST_SRC_PATH (rustc --print sysroot)/lib/rustlib/src/rust/src/
+#set -xU RUST_SRC_PATH (rustc --print sysroot)/lib/rustlib/src/rust/src/
 
+
+setxkbmap -option caps:swapescape
 
 function start_agent 
     echo "Initializing new SSH agent ..."
@@ -52,11 +54,6 @@ end
 
 
 fish_vi_key_bindings
-function fish_user_key_bindings
-bind -M insert  \cH 'backward-kill-bigword'
-bind  L 'forward-word'
-bind  H 'backward-word'
-end
 
 if [ -z $DISPLAY ]; and [ (tty) = /dev/tty1 ]; then
 	#echo "Hello world"

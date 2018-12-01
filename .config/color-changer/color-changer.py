@@ -29,8 +29,16 @@ def set_ume_theme(mode):
         subprocess.call(["ume", "--change-colorset", "1"])
 def set_bg(mode):
     subprocess.call(["feh", "--bg-center", PATH + "./{}bg.png".format(mode)])
+
 def set_vim_colors(mode): 
-    subprocess.call(["cat ~/.config/color-changer/vim{} > ~/.vimcolors".format(mode)], shell=True)
+    output = subprocess.check_output(['vim', '--serverlist']).split()
+    if mode == "night":
+        for inst in output:
+            subprocess.call(['vim', '--servername', inst, '--remote-send', '"<Esc>:set bg=dark<CR>"'])
+    else:
+        for inst in output:
+            subprocess.call(['vim', '--servername', inst, '--remote-send', '"<Esc>:set bg=light<CR>"'])
+
 
 def set_all(mode):
     set_polybar_theme(mode)
