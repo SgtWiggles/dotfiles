@@ -1,28 +1,35 @@
 set shell=/bin/bash
 set rtp+=~/.vim/bundle/Vundle.vim
-set rtp+=/usr/bin/fzf
+set encoding=utf-8
 
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'Valloric/YouCompleteMe'
+
+if has('nvim')
+	Plugin 'Shougo/deoplete.nvim'
+else 
+	Plugin 'Shougo/deoplete.nvim'
+	Plugin 'roxma/nvim-yarp'
+	Plugin 'roxma/vim-hug-neovim-rpc'
+endif
+
+"Plugin 'Shougo/neoinclude.vim'
+Plugin 'autozimu/LanguageClient-neovim'
 
 Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'chriskempson/base16-vim'
 Plugin 'miyakogi/seiya.vim'
 
 Plugin 'tylerbrazier/vim-bracepair'
-"Plugin 'dansomething/vim-eclim'
-Plugin 'rhysd/vim-clang-format'
 Plugin 'rhysd/clever-f.vim'
 Plugin 'nelstrom/vim-visual-star-search'
 
-Plugin 'dracula/vim'
 
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 
+Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
-Plugin 'flazz/vim-colorschemes'
 Plugin 'scrooloose/nerdcommenter'
 
 Plugin 'airblade/vim-gitgutter'
@@ -33,14 +40,8 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'godlygeek/tabular'
 
-Plugin 'rdnetto/YCM-Generator'
 Plugin 'ludovicchabant/vim-gutentags'
 
-Plugin 'ARM9/arm-syntax-vim'
-
-Plugin 'rust-lang/rust.vim'
-
-Plugin 'philj56/vim-asm-indent'
 Plugin 'vim-scripts/syntaxm4.vim'
 
 Plugin 'dansomething/vim-eclim'
@@ -52,6 +53,7 @@ Plugin 'lervag/vimtex'
 Plugin 'xuhdev/vim-latex-live-preview'
 
 Plugin 'pangloss/vim-javascript'
+Plugin 'igankevich/mesonic'
 
 call vundle#end()
 
@@ -59,23 +61,20 @@ set nocompatible
 let &rtp  = '~/.vim/bundle/vimtex,' . &rtp
 let &rtp .= ',~/.vim/bundle/vimtex/after'
 
+let mapleader=" "
+
 filetype plugin indent on
 set t_Co=256
 
 
 "Theme
-if strftime("%H") < 7 || strftime("%H") >= 19
-	set background=light
-	colorscheme PaperColor
-else
-	set background=light
-	colorscheme PaperColor
-endif
+source ~/.vimcolors
+colorscheme PaperColor
+nnoremap <leader>pn :set bg=dark<CR>:AirlineTheme violet<CR>
+nnoremap <leader>pd :set bg=light<CR>:AirlineTheme papercolor<CR>
 
-let base16colorspace=256
-
-"set background=dark
-"colorscheme dracula
+set hlsearch
+nnoremap <silent> <leader>noh :noh<CR>
 
 syntax on
 highlight clear SignColumn
@@ -89,10 +88,15 @@ set shiftwidth=2
 set softtabstop=0
 
 set noexpandtab
+autocmd Filetype haskell set expandtab
+autocmd Filetype haskell set tabstop=8
 set list lcs=tab:\¦\ "needs the space
 
+filetype plugin on
+set omnifunc=syntaxcomplete#Complete
+
 set clipboard=unnamedplus
-set completeopt-=preview
+"set completeopt-=preview
 
 set number
 set cursorline
@@ -101,7 +105,6 @@ let g:seiya_auto_enable=1
 set ignorecase
 set smartcase
 
-let mapleader=" "
 
 "Keyboard bindings
 map <F11> :setlocal spell! spelllang=en_us<CR>
@@ -116,6 +119,11 @@ vnoremap J 10j
 vnoremap K 10k
 vnoremap L w
 vnoremap H b
+
+
+"Plugin: Airline
+"Airline: Formatting Settings
+let g:airline_section_c = '%02n: %F'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline#extensions#whitespace#enabled = 0
@@ -145,21 +153,13 @@ nmap <leader>- <Plug>AirlineSelectPrevTab
 nmap <leader>+ <Plug>AirlineSelectNextTab
 nnoremap <leader>b :ls<CR>:b
 nnoremap <leader>q :bw<CR>
-nnoremap <leader>k :AirlineSelectPrevTab<CR>
-nnoremap <leader>j :AirlineSelectNextTab<CR>
+nmap <leader>k <Plug>AirlineSelectNextTab
+nmap <leader>j <Plug>AirlineSelectPrevTab
 
 nnoremap <C-n> :%s///g<left><left>
 vnoremap <C-n> *:%s///g<left><left>
 
 set scrolloff=10
-
-augroup AutoSaveFolds
-	autocmd!
-	autocmd BufWinLeave * mkview
-	autocmd BufWinEnter * silent loadview
-augroup END
-autocmd BufEnter * if expand("%:p:h") !~ '^/tmp' | silent! lcd %:p:h | endif
-
 
 if !has("gui_running")
 	noremap! <C-BS> <C-w>
@@ -185,7 +185,7 @@ nnoremap <C-w><C-v> :vsp
 
 " Saving and loading
 nnoremap <C-s> :w<CR>
-inoremap <C-s> <Esc> :w<CR>
+inoremap <C-s> <Esc>:w<CR>
 
 " Java
 "autocmd Filetype java nnoremap <C-s> :%JavaFormat<CR> :w<CR>
@@ -196,50 +196,127 @@ let g:EclimCompletionMethod = 'omnifunc'
 " Reload vimrc
 nnoremap <F12> :source ~/.vimrc<CR>
 
-" Palette search
+
+" Plugin: Clang Format
+"let g:clang_format#code_style = "LLVM"
+"let g:clang_format#style_options = {
+"			\"AccessModifierOffset": -4,
+"			\"AllowShortBlocksOnASingleLine": "false",
+"			\"AllowShortFunctionsOnASingleLine": "None",
+"			\"AllowShortIfStatementsOnASingleLine": "false",
+"			\"AllowShortLoopsOnASingleLine": "false",
+"			\"BreakBeforeBinaryOperators": "false",
+"			\"BreakBeforeBraces": "Attach",
+"			\"BreakAfterJavaFieldAnnotations": "true",
+"			\"ColumnLimit": 120 ,
+"			\"IndentCaseLabels": "true",
+"			\"IndentWidth": 2,
+"			\"MaxEmptyLinesToKeep": 1,
+"			\"SpaceBeforeAssignmentOperators":"true",
+"			\"SpaceBeforeParens": "ControlStatements",
+"			\"SpacesInParentheses": "false",
+"			\"TabWidth": 2,
+"			\"UseTab": "Always"
+"			\ }
+"
+"let g:clang_format#auto_format=1
+"let g:clang_format#detect_style_file=1
+
+"Plugin: Gitgutter
+"let g:gitgutter_realtime = 1
+"let g:gitgutter_eager = 1
+
+
+"Plugin: FZF file search
+function! FindGitRoot()
+	let tmp = system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
+	echom tmp
+  return tmp
+endfunction
+command! ProjectFiles execute 'Files' . FindGitRoot()
+" nnoremap <silent> <leader><leader> :Files <C-R>=expand('%:h')<CR><CR>
+nnoremap <silent> <leader><leader> :ProjectFiles<CR>
+
 inoremap <C-p><Esc> :Files<CR>
 nnoremap <C-p> :Files<CR>
 
-"Plugin: Clang Format
-let g:clang_format#code_style = "llvm"
-let g:clang_format#style_options = {
-			\"AccessModifierOffset": -4											 ,
-			\"AllowShortBlocksOnASingleLine": "false",
-			\"AllowShortFunctionsOnASingleLine": "None",
-			\"AllowShortIfStatementsOnASingleLine": "false",
-			\"AllowShortLoopsOnASingleLine": "false",
-			\"BreakBeforeBinaryOperators": "false",
-			\"BreakBeforeBraces": "Attach",
-			\"BreakAfterJavaFieldAnnotations": "true",
-			\"ColumnLimit": 120 ,
-			\"IndentCaseLabels": "true",
-			\"IndentWidth": 2,
-			\"MaxEmptyLinesToKeep": 1,
-			\"SpaceBeforeAssignmentOperators":"true",
-			\"SpaceBeforeParens": "ControlStatements",
-			\"SpacesInParentheses": "false",
-			\"TabWidth": 2,
-			\"UseTab": "Always"
-			\ }
+"LangaugeClient: 
+let g:LanguageClient_autoStart = 1
+let g:LanguageClient_serverCommands = {
+    \ 'c': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'cpp': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'cuda': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'objc': ['ccls', '--log-file=/tmp/cc.log'],
+    \ }
+let g:LanguageClient_loggingLevel = 'INFO'
+let g:LanguageClient_loadSettings = 1 
+let g:LanguageClient_settingsPath = '~/.config/nvim/settings.json'
+let g:LanguageClient_hasSnippetSupport = 0
+augroup LanguageClient_config
+	autocmd!
+	autocmd BufEnter * let b:Plugin_LanguageClient_started = 0
+	autocmd User LanguageClientStarted let b:Plugin_LanguageClient_started = 1
+	autocmd User LanguageClientStopped let b:Plugin_LanguageClient_stopped = 0
+	autocmd CursorMoved * if b:Plugin_LanguageClient_started | sil call LanguageClient#textDocument_documentHighlight() | endif
+augroup END
+function! C_init()
+  setl formatexpr=LanguageClient#textDocument_rangeFormatting()
+endfunction
+autocmd FileType c,cpp,cuda,objc :call C_init()
+nnoremap <silent> <leader>d :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> <leader>R :call LanguageClient_textDocument_rename()<CR>
+nnoremap <silent> <leader>r :call LanguageClient#textDocument_references({'includeDeclaration': v:true})<CR>
+nnoremap <silent> <leader>i :call LanguageClient#textDocument_hover()<CR>
 
-let g:clang_format#auto_format=1
+function! LC_maps()
+	if has_key(g:LanguageClient_serverCommands, &filetype)
+		autocmd BufWritePre * call LanguageClient_textDocument_formatting()
+	endif
+endfunction
 
-"Plugin: Gitgutter
-let g:gitgutter_realtime = 1
-let g:gitgutter_eager = 1
+highlight ALEWarning ctermbg=Yellow 
+highlight ALEError ctermbg=LightRed
+highlight ALEWarning ctermbg=Yellow 
+highlight ALEErrorSign ctermbg=Red
 
-"Plugin: Airline
-let g:airline_theme = 'lucius'
-"let g:airline#extensions#tabline#enabled = 1
-let g:airline_section_c = '%02n: %F'
-"let g:airline_powerline_fonts = 1
+augroup RunBuffer
+	autocmd!
+	autocmd BufReadPost,FileReadPost * call LC_maps()
+augroup end
+let g:LanguageClient_diagnosticsDisplay = {
+    	\    1: {
+    	\        "name": "Error",
+    	\        "texthl": "ALEError",
+    	\        "signText": "e",
+    	\        "signTexthl": "ALEErrorSign",
+    	\    },
+    	\    2: {
+    	\        "name": "Warning",
+    	\        "texthl": "ALEWarning",
+    	\        "signText": "w",
+    	\        "signTexthl": "ALEWarningSign",
+    	\    },
+    	\    3: {
+    	\        "name": "Information",
+    	\        "texthl": "ALEInfo",
+    	\        "signText": "i",
+    	\        "signTexthl": "ALEInfoSign",
+    	\    },
+    	\    4: {
+    	\        "name": "Hint",
+    	\        "texthl": "ALEInfo",
+    	\        "signText": "h",
+    	\        "signTexthl": "ALEInfoSign",
+    	\    },
+    	\}
 
-"Plugin: FZF file search
-nnoremap <silent> <Leader><Leader> :Files <C-R>=expand('%:h')<CR><CR>
 
-"Plugin: YCM
-let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
-"
+
+"Deoplete: 
+let g:deoplete#enable_at_startup = 1
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
 function! TrimWhiteSpace()
 	%s/\s*$//
 	''
@@ -273,9 +350,10 @@ let g:vimtex_fold_automatic=0
 let g:tex_fast = "bMpr"
 let g:tex_conceal = ""
 
-if !exists('g:ycm_semantic_triggers')
-	let g:ycm_semantic_triggers = {}
-endif
-let g:ycm_semantic_triggers.tex = g:vimtex#re#youcompleteme
+"if !exists('g:ycm_semantic_triggers')
+"	let g:ycm_semantic_triggers = {}
+"endif
+"let g:ycm_semantic_triggers.tex = g:vimtex#re#youcompleteme
 "qpdfviewer plugin for forward search
 "let g:vimtex_fold_enabled=1
+
